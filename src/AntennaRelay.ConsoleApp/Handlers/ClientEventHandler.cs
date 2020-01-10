@@ -11,46 +11,14 @@ namespace AntennaRelay.ConsoleApp.Handlers
     public class ClientEventHandler
     {
         private static DiscordSocketClient _client;
-        private RelayModel _relays;
-
-        //private List<Dictionary<string, Dictionary<string, string>>> _relays = new List<Dictionary<string, Dictionary<string, string>>>()
-        //{
-        //    new Dictionary<string, Dictionary<string, string>>()
-        //    {
-        //        {
-        //            "FirstRelay", new Dictionary<string, string>()
-        //            {
-        //                {"Source", "457063331518349315"},
-        //                {"Destination", "650599729348083722"}
-        //            }
-        //        }
-        //    },
-        //    new Dictionary<string, Dictionary<string, string>>()
-        //    {
-        //        {
-        //            "SecondRelay", new Dictionary<string, string>()
-        //            {
-        //                {"Source", "665034602448158731"},
-        //                {"Destination", "665034625185349632"}
-        //            }
-        //        }
-        //    },
-        //    new Dictionary<string, Dictionary<string, string>>()
-        //    {
-        //        {
-        //            "ThirdRelay", new Dictionary<string, string>()
-        //            {
-        //                {"Source", "457063331518349315"},
-        //                {"Destination", "665034625185349632"}
-        //            }
-        //        }
-        //    }
-        //};
+        private readonly ConfigModel _config;
+        private static List<Dictionary<string, Dictionary<string, string>>> _relays;
 
         public ClientEventHandler(DiscordSocketClient client)
         {
             _client = client;
-            _relays = new RelayHandler().GetRelays();
+            _config ??= new ConfigHandler().GetConfig();
+            _relays = RelayHandler.GetRelays();
         }
 
         public async Task InitializeEvents()
@@ -60,23 +28,37 @@ namespace AntennaRelay.ConsoleApp.Handlers
 
         private async Task MessageReceived(SocketMessage message)
         {
-            if (message.Author.Id == _client.CurrentUser.Id || !message.Content.StartsWith("/a"))
+            if (message.Author.Id == _client.CurrentUser.Id || !message.Content.StartsWith(_config.RelayPrefix))
                 return;
+
+            var newMessage = FilterMessage(message);
 
             foreach (var relay in _relays)
             {
                 foreach (var link in relay)
                 {
-                    if (message.Channel == GetChannelFromId(link.Value["Source"]))
-                        await GetChannelFromId(link.Value["Destination"]).SendMessageAsync(message.Content);
+                    if (message.Channel == GetChannelFromIdString(link.Value["SourceChannelId"]))
+                        await GetChannelFromIdString(link.Value["DestinationChannelId"]).SendMessageAsync(newMessage);
                 }
             }
         }
 
-        private SocketTextChannel GetChannelFromId(string channelId)
+        private string FilterMessage(SocketMessage message)
+        {
+            var newMessage = message.Content;
+
+            if (message.Content.StartsWith(_config.RelayPrefix))
+                newMessage = message.Content.Substring(_config.RelayPrefix.Length);
+            if (!message.Author.IsBot)
+                newMessage = $"**{message.Author.Username}:** {newMessage}";
+            return newMessage;
+        }
+
+        private SocketTextChannel GetChannelFromIdString(string channelId)
         {
             var channel = _client.GetChannel(Convert.ToUInt64(channelId));
             return (SocketTextChannel)channel;
         }
+
     }
 }

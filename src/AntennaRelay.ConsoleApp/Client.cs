@@ -13,11 +13,10 @@ namespace AntennaRelay.ConsoleApp
     {
         private readonly DiscordSocketClient _client;
         private readonly ConfigModel _config;
-        private readonly RelayModel _relay;
         private readonly LogHandler _logger;
         private readonly IServiceProvider _services;
 
-        public Client(CommandService commands = null, ConfigModel config = null, RelayModel relay = null, LogHandler logger = null)
+        public Client(CommandService commands = null, ConfigModel config = null, LogHandler logger = null)
         {
             _client = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -27,7 +26,6 @@ namespace AntennaRelay.ConsoleApp
             });
 
             _config = config ?? new ConfigHandler().GetConfig();
-            _relay = relay ?? new RelayHandler().GetRelays();
             _logger = logger ?? new LogHandler();
             _services = ConfigureServices();
         }
@@ -63,7 +61,6 @@ namespace AntennaRelay.ConsoleApp
             return new ServiceCollection()
                 .AddSingleton(_client)
                 .AddSingleton<ConfigHandler>()
-                .AddSingleton<RelayHandler>()
                 .AddSingleton<ClientEventHandler>()
                 .AddSingleton<LogHandler>()
                 .BuildServiceProvider();
