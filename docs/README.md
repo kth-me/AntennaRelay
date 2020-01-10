@@ -1,7 +1,7 @@
 # Antenna Relay 
 
 <a href="https://github.com/kth-me/AntennaRelay/actions">
-    <img src="https://img.shields.io/github/workflow/status/kth-me/AntennaRelay/dotnetcore" alt="Workflow Status">
+    <img src="https://img.shields.io/github/workflow/status/kth-me/AntennaRelay/main" alt="Workflow Status">
 </a>
 
 <a href="https://github.com/kth-me/AntennaRelay/releases">
