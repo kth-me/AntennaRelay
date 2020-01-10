@@ -26,7 +26,7 @@ namespace AntennaRelay.ConsoleApp.Handlers
             {
                 Token = "",
                 Status = "Relay Ready",
-                FirstChannelId = "663641901358121010 ",
+                FirstChannelId = "663641901358121010",
                 SecondChannelId = "663887969576419328",
             };
 
