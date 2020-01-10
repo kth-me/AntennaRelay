@@ -5,17 +5,18 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using AntennaRelay.ConsoleApp.Models;
 
 namespace AntennaRelay.ConsoleApp
 {
     internal class Client
     {
         private readonly DiscordSocketClient _client;
-        private readonly Config _config;
+        private readonly ConfigModel _config;
         private readonly LogHandler _logger;
         private readonly IServiceProvider _services;
 
-        public Client(CommandService commands = null, Config config = null, LogHandler logger = null)
+        public Client(CommandService commands = null, ConfigModel config = null, LogHandler logger = null)
         {
             _client = new DiscordSocketClient(new DiscordSocketConfig
             {

@@ -1,13 +1,14 @@
 ﻿using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
+using AntennaRelay.ConsoleApp.Models;
 
 namespace AntennaRelay.ConsoleApp.Handlers
 {
     public class ClientEventHandler
     {
         private static DiscordSocketClient _client;
-        private static Config _config;
+        private static ConfigModel _config;
         
         public SocketTextChannel FirstChannel
         {

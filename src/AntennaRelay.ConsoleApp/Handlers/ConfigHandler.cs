@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using AntennaRelay.ConsoleApp.Models;
 
 namespace AntennaRelay.ConsoleApp.Handlers
 {
@@ -11,18 +12,18 @@ namespace AntennaRelay.ConsoleApp.Handlers
         private const string _configFile = "config.json";
         private const string _configLocation = _dataDirectory + "/" + _configFile;
 
-        public Config GetConfig()
+        public ConfigModel GetConfig()
             => GetConfigData();
 
-        private Config GetConfigData()
+        private ConfigModel GetConfigData()
         {
             CheckConfigExists();
             var data = File.ReadAllText(_configLocation);
-            return JsonConvert.DeserializeObject<Config>(data);
+            return JsonConvert.DeserializeObject<ConfigModel>(data);
         }
 
-        private Config GenerateDefaultConfig()
-            => new Config
+        private ConfigModel GenerateDefaultConfig()
+            => new ConfigModel
             {
                 Token = "",
                 Status = "Relay Ready",
