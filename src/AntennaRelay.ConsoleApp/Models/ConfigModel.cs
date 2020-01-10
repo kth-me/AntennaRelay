@@ -4,7 +4,7 @@
     public class ConfigModel
     {
         public string Token { get; set; }
-        public string Status { get; set; }
+        public string Playing { get; set; }
         public string FirstChannelId { get; set; }
         public string SecondChannelId { get; set; }
     }
