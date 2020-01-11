@@ -28,30 +28,32 @@ namespace AntennaRelay.ConsoleApp.Handlers
 
         private async Task MessageReceived(SocketMessage message)
         {
-            if (message.Author.Id == _client.CurrentUser.Id || !message.Content.StartsWith(_config.RelayPrefix))
+            if (message.Author.Id == _client.CurrentUser.Id || 
+                !message.Content.Contains(_config.RelayPrefix))
                 return;
 
-            var newMessage = FilterMessage(message);
+            var filteredMessage = FilterMessage(message);
 
             foreach (var relay in _relays)
             {
                 foreach (var link in relay)
                 {
                     if (message.Channel == GetChannelFromIdString(link.Value["SourceChannelId"]))
-                        await GetChannelFromIdString(link.Value["DestinationChannelId"]).SendMessageAsync(newMessage);
+                    {
+                        await GetChannelFromIdString(link.Value["DestinationChannelId"]).SendMessageAsync(text: filteredMessage);
+                    }
                 }
             }
         }
 
         private string FilterMessage(SocketMessage message)
         {
-            var newMessage = message.Content;
+            var filteredMessage = message.Content.Remove(message.Content.IndexOf(_config.RelayPrefix), _config.RelayPrefix.Length).Trim();
 
-            if (message.Content.StartsWith(_config.RelayPrefix))
-                newMessage = message.Content.Substring(_config.RelayPrefix.Length);
             if (!message.Author.IsBot)
-                newMessage = $"**{message.Author.Username}:** {newMessage}";
-            return newMessage;
+                filteredMessage = $"{message.Author.Username}: {filteredMessage}";
+            
+            return filteredMessage;
         }
 
         private SocketTextChannel GetChannelFromIdString(string channelId)
