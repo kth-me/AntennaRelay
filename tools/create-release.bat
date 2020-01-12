@@ -16,8 +16,6 @@ bump-version minor
 git commit -a -m "Prepare release v1.2.0"
 
 
-
-
 ::Finishing a release branch
 git checkout develop
 git merge --no-ff release-1.2.0
