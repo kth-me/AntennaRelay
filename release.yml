@@ -1,0 +1,14 @@
+name: release
+
+on: [push]
+
+jobs:
+  release:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Create GitHub release
+        uses: Roang-zero1/github-create-release-action@master
+        with:
+          release_branch: master
