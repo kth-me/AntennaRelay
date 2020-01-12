@@ -1,8 +1,18 @@
-on: push
 name: Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 jobs:
   release:
+    
     runs-on: ubuntu-latest
+    
     steps:
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@master
