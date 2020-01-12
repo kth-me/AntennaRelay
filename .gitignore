@@ -17,8 +17,7 @@
 mono_crash.*
 
 # Sensitive config data
-config.json
-relays.json
+[Dd]ata/
 
 # Build results
 [Dd]ebug/
