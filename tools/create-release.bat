@@ -58,6 +58,7 @@ git checkout -b release-%newVersion% develop
 )>VERSION
 setversion -r @VERSION
 git commit -a -m "Bump version to %newVersion%"
+git push --set-upstream origin release-%newVersion%
 goto EndProcess
 
 :EndProcess
