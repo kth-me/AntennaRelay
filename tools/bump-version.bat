@@ -21,30 +21,41 @@ for /f "usebackq tokens=1,2,3 delims=." %%A in ("VERSION") do (
   set currentPatch=%%C
 )
 
-:: Check for valid parameter and bump version accordingly
+:: Check for valid parameter (none defaults to patch) and bump version accordingly
 :ParamaterChecks
-if [%1]==[] goto Fail
-if %1%==major (
-    set /a newMajor=currentMajor+1
-    set /a newMinor=0
-    set /a newPatch=0
-) else if %1%==minor (
-    set /a newMajor=currentMajor
-    set /a newMinor=currentMinor+1
-    set /a newPatch=0
-) else if %1%==patch (
-    set /a newMajor=currentMajor
-    set /a newMinor=currentMinor
-    set /a newPatch=currentPatch+1
-) else (
-    goto Fail
-)
+if [%1]==[] goto BumpPatch
+if %1%==major goto BumpMajor
+if %1%==minor goto BumpMinor
+if %1%==patch goto BumpPatch
+goto Fail
+
+:BumpMajor
+set /a newMajor=currentMajor+1
+set /a newMinor=0
+set /a newPatch=0
+goto SaveVariables
+
+:BumpMinor
+set /a newMajor=currentMajor
+set /a newMinor=currentMinor+1
+set /a newPatch=0
+goto SaveVariables
+
+:BumpPatch
+set /a newMajor=currentMajor
+set /a newMinor=currentMinor
+set /a newPatch=currentPatch+1
+goto SaveVariables
+
+:: Save new version in VERSION file
+:SaveVariables
+set newVersion=%newMajor%.%newMinor%.%newPatch%
 (
-    echo %newMajor%.%newMinor%.%newPatch%
+    echo %newVersion%
 )>VERSION
 goto Success
 
-:: Confirm success and set version within all project files in lower directories (dependency: https://github.com/TAGC/dotnet-setversion)
+:: Set version based on contents of VERSION file to all project files in lower directories (dependency: https://github.com/TAGC/dotnet-setversion)
 :Success
 setversion -r @VERSION
 goto EndProcess
