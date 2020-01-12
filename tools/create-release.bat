@@ -10,9 +10,6 @@ goto BeginProcess
 
 
 
-
-
-
 ::Creating a release branch
 git checkout -b release-1.2.0 develop
 bump-version minor
